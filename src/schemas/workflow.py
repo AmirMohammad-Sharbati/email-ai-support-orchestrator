@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import List
-from src.schemas.enums import Department
+from schemas.enums import Department
 
 class Intent(BaseModel):
     department: Department

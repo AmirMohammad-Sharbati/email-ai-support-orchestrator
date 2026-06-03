@@ -1,4 +1,4 @@
-from src.mock_data.mock_apis import MockProductAPI
+from mock_data.mock_apis import MockProductAPI
 
 class ProductService:
     async def get_info(self, product_name: str) -> dict:

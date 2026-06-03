@@ -1,4 +1,4 @@
-from src.mock_data.mock_apis import MockRefundAPI
+from mock_data.mock_apis import MockRefundAPI
 
 class RefundService:
     async def get_policy(self) -> dict:

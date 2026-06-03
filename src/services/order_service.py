@@ -1,4 +1,4 @@
-from src.mock_data.mock_apis import MockOrderAPI
+from mock_data.mock_apis import MockOrderAPI
 
 class OrderService:
     async def get_status(self, order_id: str) -> dict:

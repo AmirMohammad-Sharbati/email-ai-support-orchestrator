@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import List, Dict, Any, Optional
 from datetime import datetime
-from src.schemas.enums import Department, StepType
+from schemas.enums import Department, StepType
 
 class ProcessingStep(BaseModel):
     step_id: int
