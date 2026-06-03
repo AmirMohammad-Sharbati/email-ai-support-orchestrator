@@ -81,8 +81,6 @@ email-ai-support-orchestrator/
 │
 ├── .env
 ├── .gitignore
-├── Dockerfile
-├── docker-compose.yml
 ├── pyproject.toml
 ├── requirements.txt
 ├── Makefile
