@@ -1,194 +1,167 @@
 
 # Intelligent Email Support Orchestrator
 
+An AI-powered system that analyzes multi-intent customer support emails, routes requests to appropriate departments, fetches data from mock APIs, and generates unified professional responses.
+
+
+
 ## Architecture
 
-Email Input → AI Router → Intent Detection → Chain Builder → Tool Execution → Response Composer → JSON Output
+Email Input → Intent Router → Chain Builder → Tool Execution → Response Composer → JSON Output
+
 
 
 ## Technology Stack
-- **FastAPI**: Async web framework
-- **Groq (LLaMA 3 70B)**: 70B parameter LLM for routing & composition
-- **Docker**: Containerization
-- **Pydantic**: Type-safe data validation
+
+
+| Category | Technology |
+|----------|------------|
+| Framework | FastAPI (async) |
+| LLM | Ollama + Llama 3.2 3B (local, free) |
+| Logging | Loguru |
+
+
+
+## Design Patterns
+
+| Pattern | Implementation |
+|---------|----------------|
+| **Orchestrator** | Central `WorkflowOrchestrator` controls all processing |
+| **Chain of Responsibility** | Sequential task execution (extract → fetch → compose) |
+| **Strategy** | Pluggable services per department (sales, technical, finance) |
+| **Modular Architecture** | Isolated layers (intelligence, orchestrator, services) |
+
+
+## Project Directory
+
+```
+
+email-ai-support-orchestrator/
+│
+├── src/
+│   ├── config/
+│   │   ├── settings.py
+│   │
+│   ├── orchestrator/
+│   │   ├── router.py
+│   │   ├── workflow.py
+│   │   └── chain_builder.py
+│   │
+│   ├── services/
+│   │   ├── order_service.py
+│   │   ├── product_service.py
+│   │   └── refund_service.py
+│   │
+│   ├── intelligence/
+│   │   ├── classifier.py
+│   │   ├── entity_extractor.py
+│   │   └── response_generator.py
+│   │
+│   ├── infrastructure/
+│   │   ├── llm_client.py
+│   │   └── logger.py
+│   │
+│   ├── schemas/
+│   │   ├── enums.py
+│   │   ├── request.py
+│   │   ├── response.py
+│   │   └── workflow.py
+│   │
+│   ├── mock_data/
+│   │   └── mock_apis.py
+│   │
+│   └── main.py
+│
+├── tests/
+│
+├── prompts/
+│   ├── simple_email.txt
+│   └── complex_email.txt
+│
+│
+├── .env
+├── .gitignore
+├── Dockerfile
+├── docker-compose.yml
+├── pyproject.toml
+├── requirements.txt
+├── Makefile
+├── README.md
+└── LICENSE
+
+```
 
 ## Quick Start
 
 ### Prerequisites
+
 - Python 3.11+
-- Groq API key (free)
+- Ollama installed
+- 8GB+ RAM (4GB free for model)
+
 
 ### Installation
 ```bash
-git clone <repo>
-cd email-orchestrator
+git clone https://github.com/AmirMohammad-Sharbati/email-ai-support-orchestrator.git
+cd email-ai-support-orchestrator
+
+# Create virtual environment
 python -m venv venv
-source venv/bin/activate
+source venv/bin/activate  # Linux/Mac
+# venv\Scripts\activate   # Windows
+
 pip install -r requirements.txt
-echo "GROQ_API_KEY=your_key" > .env
 ```
 
-### Run
+
+### Running the System
+
+#### Terminal 1 – Start Ollama
+
 ```bash
+ollama serve
+```
 
-# Development
-uvicorn src.main:app --reload
+#### Terminal 2 – Start API
 
-# Production with Docker
-docker-compose up --build
+```bash
+ollama list  # Should show llama3.2:3b
+
+cd email-ai-support-orchestrator
+source venv/bin/activate
+export PYTHONPATH=$(pwd)/src
+uvicorn src.main:app --host 0.0.0.0 --port 8000
 ```
 
 
 ### API Usage
-```bash
 
-curl -X POST http://localhost:8000/process-email \
+#### Health Check
+
+```bash
+curl http://localhost:8000/health
+```
+
+#### Process Email
+
+```bash
+curl -X POST http://localhost:8000/process \
   -H "Content-Type: application/json" \
-  -d '{"email_text": "My order #1234 is late and my speaker is broken. Can I refund?"}'
-```
-
-### Design Patterns
-- Router Pattern: AI-based intent routing
-- Chain of Responsibility: Sequential task execution
-- Strategy Pattern: Pluggable tools per department
-- Orchestrator Pattern: Centralized workflow control
-
-### Testing
-```bash
-pytest tests/ -v --cov=src
+  -d '{"email_text": "My order #1234 is late and my speaker is broken. Can I get a refund?"}'
 ```
 
 
----
-
-## Running Your Perfect Project
-
-```bash
-# 1. Create project
-mkdir email-orchestrator && cd email-orchestrator
-
-# 2. Create all files above (copy-paste)
-
-# 3. Install
-python -m venv venv
-source venv/bin/activate  # or venv\Scripts\activate on Windows
-pip install -r requirements.txt
-
-# 4. Add API key to .env
-echo "GROQ_API_KEY=your_groq_key" > .env
-
-# 5. Run
-uvicorn src.main:app --reload
-
-# 6. Test in another terminal
-curl -X POST http://localhost:8000/process-email \
-  -H "Content-Type: application/json" \
-  -d '{"email_text": "Order ORD-1234 not arrived, speaker wont connect, need refund"}'
-```
-
----
-
-### Project Directory
-
-```
-email-orchestrator/
-├── .env                          # API keys (never commit!)
-├── .gitignore
-├── README.md                     # Detailed documentation
-├── requirements.txt
-├── docker-compose.yml            # Optional: shows DevOps skill
-├── Dockerfile                    # Containerization
-├── config/
-│   ├── __init__.py
-│   └── settings.py               # Configuration management
-├── src/
-│   ├── __init__.py
-│   ├── main.py                   # FastAPI entry point
-│   ├── orchestrator/
-│   │   ├── __init__.py
-│   │   ├── router.py             # AI Router (LLM decides steps)
-│   │   └── chain_builder.py      # Builds execution chain
-│   ├── agents/
-│   │   ├── __init__.py
-│   │   ├── intent_agent.py       # Extracts intents via LLM
-│   │   ├── extractor_agent.py    # Extracts entities (order IDs, products)
-│   │   └── composer_agent.py     # Generates final email
-│   ├── tools/
-│   │   ├── __init__.py
-│   │   ├── order_tool.py
-│   │   ├── product_tool.py
-│   │   └── refund_tool.py
-│   └── models/
-│       ├── __init__.py
-│       └── schemas.py            # Pydantic models
-├── tests/
-│   ├── __init__.py
-│   ├── test_orchestrator.py
-│   └── test_agents.py
-└── examples/
-    └── sample_emails.json        # Test cases
-```
-
-
-
-1. Receive email
-        ↓
-2. Router analyzes email
-        ↓
-3. Detect intents
-        ↓
-4. Extract order/product info
-        ↓
-5. Create task chain
-        ↓
-6. Call required APIs
-        ↓
-7. Gather outputs
-        ↓
-8. Generate unified response
-        ↓
-9. Produce JSON
-
-
-----
-
-Design patterns you should mention in README
-
-Mention these for bonus points:
-
-1. Orchestrator Pattern
-
-Router controls workflow.
-
-2. Chain of Responsibility
-
-Tasks processed sequentially.
-
-3. Modular Architecture
-
-Each department isolated.
-
-Easy maintenance.
-
-4. Dependency Separation
-
-Mock APIs separated from business logic.
-
-Very professional answer.
-
-
-----
+## Processing Flow
 
 ```mermaid
 sequenceDiagram
-
-Customer->>Router: Email
-Router->>Extractor: Parse entities
-Extractor-->>Router: order_id
-
-Router->>OrderAPI: get_order_status()
-OrderAPI-->>Router: shipping status
-
-Router->>LLM: Generate response
-LLM-->>Router: Final email
+    Customer->>Router: Email
+    Router->>Classifier: Detect intents
+    Classifier-->>Router: [sales, technical, finance]
+    Router->>Extractor: Extract entities
+    Extractor-->>Router: order_id, product_name
+    Router->>Services: Call mock APIs
+    Services-->>Router: Order status, product info, refund policy
+    Router->>Generator: Generate response
+    Generator-->>Customer: Unified reply
 ```
