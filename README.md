@@ -1,5 +1,10 @@
 # Intelligent Email Support Orchestrator
 
+![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-green.svg)
+![LLM](https://img.shields.io/badge/LLM-Ollama-orange.svg)
+![License](https://img.shields.io/badge/License-MIT-purple.svg)
+
 An AI-powered system that analyzes multi-intent customer support emails, routes requests to appropriate departments, fetches data from mock APIs, and generates unified professional responses.
 
 
@@ -133,6 +138,16 @@ export PYTHONPATH=$(pwd)/src
 uvicorn src.main:app --host 0.0.0.0 --port 8000
 ```
 
+## Development Commands
+
+With Makefile, starting program is easier...
+
+```bash
+make install  # Install dependencies
+make run      # Start the API server
+make test     # Run tests
+make clean    # Remove cache files
+```
 
 ## API Usage
 
@@ -197,7 +212,24 @@ DEFAULT_CONFIDENCE=0.7
 
 *First request loads model into memory. Subsequent requests are faster.*
 
-## Processing Flow
+
+
+## Architecture
+
+### High-Level Overview
+
+The system follows a **pipeline architecture** with four main layers:
+
+| Layer | Components | Responsibility |
+|-------|------------|----------------|
+| **API Gateway** | `main.py` | Receive emails, validate input |
+| **Orchestration** | `orchestrator/workflow.py`, `orchestrator/router.py` | Control flow, detect intents |
+| **Execution** | `orchestrator/chain_builder.py`, `services/` | Extract entities, call APIs |
+| **Intelligence** | `intelligence/classifier.py`, `intelligence/entity_extractor.py` | LLM operations |
+| **Generation** | `intelligence/response_generator.py` | Compose final email |
+
+
+### Sequence Flow
 
 ```mermaid
 sequenceDiagram
@@ -211,6 +243,42 @@ sequenceDiagram
     API->>Generator: Generate response
     Generator-->>Customer: Unified email reply
 ```
+
+
+### Data Flow
+
+- Input: Raw email text
+- Intent Detection: LLM identifies departments
+- Entity Extraction: Regex + LLM extracts order_id, product_name
+- API Calls: Mock services return data
+- Response Generation: LLM composes professional email
+- Output: JSON with original text, steps, and response
+
+
+### Component Diagram
+
+```mermaid
+flowchart TD
+    A[Customer Email] --> B[FastAPI Gateway<br/>main.py]
+    B --> C[Workflow Orchestrator<br/>workflow.py]
+    C --> D[Intent Classifier<br/>classifier.py]
+    D --> E{Intent Detection}
+    E --> F[Sales Intent]
+    E --> G[Technical Intent]
+    E --> H[Finance Intent]
+    F --> I[Order Service]
+    G --> J[Product Service]
+    H --> K[Refund Service]
+    I --> L[Response Generator<br/>response_generator.py]
+    J --> L
+    K --> L
+    L --> M[JSON Output]
+    
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style M fill:#9f9,stroke:#333,stroke-width:2px
+    style C fill:#ff9,stroke:#333,stroke-width:2px
+```
+
 
 ## Testing
 
