@@ -4,15 +4,16 @@ from intelligence.response_generator import ResponseGenerator
 from schemas.response import EmailResponse, ProcessingStep
 from schemas.enums import StepType
 from config.settings import settings
+from infrastructure.logger import logger
 
 class WorkflowOrchestrator:
     def __init__(self):
         self.router = OrchestratorRouter()
         self.chain_builder = ChainBuilder()
         self.response_generator = ResponseGenerator()
-    
+        logger.info("WorkflowOrchestrator initialized")
+
     async def process(self, email_text: str) -> EmailResponse:
-        
         """
         Process customer email through multi-intent orchestration.
         
@@ -26,6 +27,8 @@ class WorkflowOrchestrator:
             Exception: If any step fails (caught by FastAPI)
         """
         
+        logger.info(f"Starting email processing: {email_text[:settings.max_email_preview]}...")
+
         processing_steps = []
         step_id = 0
         
@@ -39,7 +42,7 @@ class WorkflowOrchestrator:
             input_data={"email_preview": email_text[:200]},
             output_data={"intents": len(intents)}
         ))
-        
+
         # Step 2: Build execution chain and collect data
         chain_steps, collected_data = await self.chain_builder.build_and_execute(
             intents, email_text
@@ -61,6 +64,8 @@ class WorkflowOrchestrator:
             output_data={"response_length": len(final_response)}
         ))
         
+        logger.info(f"Processing complete. Response length: {len(final_response)} characters")
+
         return EmailResponse(
             original_text=email_text,
             processing_steps=processing_steps,
