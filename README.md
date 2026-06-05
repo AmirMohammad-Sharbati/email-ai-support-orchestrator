@@ -80,15 +80,14 @@ email-ai-support-orchestrator/
 │   ├── simple_email.txt
 │   └── complex_email.txt
 │
-│
 ├── .env
 ├── .gitignore
+├── kaggle_setup.ipynb
 ├── project_description.pdf
 ├── requirements.txt
 ├── Makefile
 ├── README.md
 └── LICENSE
-
 ```
 
 
