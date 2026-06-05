@@ -1,21 +1,14 @@
-# Intelligent Email Support Orchestrator
+# 📧 Intelligent Email Support Orchestrator
 
-![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-green.svg)
-![LLM](https://img.shields.io/badge/LLM-Ollama-orange.svg)
-![License](https://img.shields.io/badge/License-MIT-purple.svg)
+🐍 ![Python](https://img.shields.io/badge/Python-3.11+-blue.svg) 
+![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-green.svg) 
+![LLM](https://img.shields.io/badge/LLM-Ollama-orange.svg) 
+![License](https://img.shields.io/badge/License-MIT-purple.svg) 
 
 An AI-powered system that analyzes multi-intent customer support emails, routes requests to appropriate departments, fetches data from mock APIs, and generates unified professional responses.
 
 
-
-## Architecture
-
-Email Input → Intent Router → Chain Builder → Tool Execution → Response Composer → JSON Output
-
-
-
-## Technology Stack
+## 🛠️ Technology Stack
 
 
 | Category | Technology |
@@ -28,7 +21,8 @@ Email Input → Intent Router → Chain Builder → Tool Execution → Response 
 | Testing | Pytest |
 
 
-## Design Patterns
+
+## 🎨 Design Patterns
 
 | Pattern | Implementation |
 |---------|----------------|
@@ -38,7 +32,8 @@ Email Input → Intent Router → Chain Builder → Tool Execution → Response 
 | **Modular Architecture** | Isolated layers (intelligence, orchestrator, services) |
 
 
-## Project Directory
+
+## 📂 Project Directory
 
 ```
 
@@ -78,9 +73,10 @@ email-ai-support-orchestrator/
 │   │
 │   └── main.py                # FastAPI entry point
 │
-├── tests/                    
+├── tests/ 
+│   └── test_orchestrator.py              
 │
-├── prompts/
+├── examples/
 │   ├── simple_email.txt
 │   └── complex_email.txt
 │
@@ -88,7 +84,6 @@ email-ai-support-orchestrator/
 ├── .env
 ├── .gitignore
 ├── project_description.pdf
-├── pyproject.toml
 ├── requirements.txt
 ├── Makefile
 ├── README.md
@@ -96,7 +91,8 @@ email-ai-support-orchestrator/
 
 ```
 
-## Quick Start
+
+## 🚀 Quick Start
 
 ### Prerequisites
 
@@ -138,7 +134,7 @@ export PYTHONPATH=$(pwd)/src
 uvicorn src.main:app --host 0.0.0.0 --port 8000
 ```
 
-## Development Commands
+## 🔨 Development Commands
 
 With Makefile, starting program is easier...
 
@@ -149,7 +145,20 @@ make test     # Run tests
 make clean    # Remove cache files
 ```
 
-## API Usage
+
+## 📚 API Documentation
+
+Once running, FastAPI provides automatic interactive docs:
+
+| Documentation | URL |
+|---------------|-----|
+| Swagger UI | `http://localhost:8000/docs` |
+| ReDoc | `http://localhost:8000/redoc` |
+| OpenAPI JSON | `http://localhost:8000/openapi.json` |
+
+
+
+## 🌐 API Usage
 
 ### Health Check
 
@@ -186,7 +195,15 @@ curl -X POST http://localhost:8000/process \
 | `metadata`	| Processing statistics (intent count, model used, departments involved) |
 
 
-## Environment Configuration
+### Testing
+
+```
+pytest tests/ -v
+```
+
+
+
+## ⚙️ Environment Configuration
 Create .env file:
 ```
 # Ollama Configuration
@@ -204,9 +221,10 @@ MAX_EMAIL_PREVIEW=100
 DEFAULT_CONFIDENCE=0.7
 ```
 
-## Performance
+## ⚡ Performance
 
 | Environment	| Hardware	| Time per Email |
+|---|---|---|
 | Local (CPU)	| Intel Core i7	| ~15-25 minutes |
 | Kaggle (GPU)	| Tesla P100	| ~10-20 seconds |
 
@@ -214,7 +232,33 @@ DEFAULT_CONFIDENCE=0.7
 
 
 
-## Architecture
+## 🔥 Running on Kaggle (GPU)
+
+For faster processing (~10-20 seconds vs 20 minutes on CPU), run on Kaggle with GPU:
+
+### Steps
+
+1. **Zip your source code**:
+   
+```bash
+cd email-ai-support-orchestrator
+zip -r email-ai-orchestrator.zip src/ tests/ examples/ requirements.txt
+```
+
+2. **Upload to Kaggle**:
+
+- Create a new Notebook
+- Add GPU accelerator (Settings → Accelerator → GPU P100)
+- Upload `email-orchestrator.zip` as a Dataset
+
+3. **Run the notebook**:
+  
+- See [`kaggle_setup.ipynb`](./kaggle_setup.ipynb) for complete setup instructions.
+
+
+## 🏗️ Architecture
+
+Email Input → Intent Router → Chain Builder → Tool Execution → Response Composer → JSON Output
 
 ### High-Level Overview
 
@@ -280,17 +324,14 @@ flowchart TD
 ```
 
 
-## Testing
-
-```
-pytest tests/ -v
-```
-
-## License
+## 📝 License
 
 MIT
 
 
-## Author
+## 👨‍💻 Author
 
 AmirMohammad Sharbati
+
+- GitHub: [@AmirMohammad-Sharbati](https://github.com/AmirMohammad-Sharbati)
+- Email: amirmohammad.shn84@gmail.com
