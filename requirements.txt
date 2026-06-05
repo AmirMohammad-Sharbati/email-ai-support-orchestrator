@@ -3,8 +3,8 @@ uvicorn[standard]==0.24.0
 pydantic==2.5.0
 pydantic-settings==2.1.0
 python-dotenv==1.0.0
-tenacity==8.2.3              # Auto-retry on API failures
-loguru==0.7.2                # Professional logging
-httpx==0.25.1                # Async HTTP
+tenacity==8.2.3            # Auto-retry on API failures
+loguru==0.7.2              # Professional logging
+httpx==0.25.1              # Async HTTP
 pytest==7.4.3
 pytest-asyncio==0.21.1
