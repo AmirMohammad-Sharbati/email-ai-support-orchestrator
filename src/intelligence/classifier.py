@@ -1,14 +1,18 @@
 from infrastructure.llm_client import OllamaClient
+from infrastructure.logger import logger
 from schemas.workflow import Intent
 from schemas.enums import Department
+from config.settings import settings
 from typing import List
-import re
 
 class IntentClassifier:
     def __init__(self):
         self.llm = OllamaClient()
+        logger.info("IntentClassifier initialized")
     
     async def classify(self, email_text: str) -> List[Intent]:
+        logger.debug(f"Classifying email: {email_text[:settings.max_email_preview]}...")
+
         prompt = f"""
         Analyze this customer support email. Return ONLY valid JSON.
         Email: {email_text}
@@ -42,12 +46,17 @@ class IntentClassifier:
         
         # Fallback if no intents detected
         if not intents:
+            logger.warning("No intents detected by LLM, using fallback")
             intents = self._fallback_classify(email_text)
-        
+                
+        logger.info(f"Detected {len(intents)} intent(s): {[i.department.value for i in intents]}")
         return intents
     
     def _fallback_classify(self, email_text: str) -> List[Intent]:
         """Rule-based fallback when LLM fails"""
+        
+        logger.debug("Using rule-based fallback classifier")
+        
         text_lower = email_text.lower()
         intents = []
         
